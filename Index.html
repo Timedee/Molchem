@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SCH3U1 — Final Test Sprint</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,400;0,600;0,700;1,400&family=Barlow+Condensed:wght@400;600;700&family=Fira+Mono:wght@400;500&display=swap');
+
+:root{
+  --bg:#0b0d12;--s1:#111318;--s2:#181b24;--border:#252836;
+  --accent:#f7c331;--a2:#3ecf8e;--a3:#e8725a;--a4:#7c9cf7;
+  --text:#dde1f0;--muted:#5a6085;--r:10px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-height:100vh;}
+
+/* TOP BAR */
+.bar{background:var(--s1);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:8px;overflow-x:auto;position:sticky;top:0;z-index:100;}
+.bar-logo{font-family:'Bebas Neue';font-size:1.6rem;color:var(--accent);white-space:nowrap;letter-spacing:2px;padding:14px 0;margin-right:12px;}
+.tab{background:none;border:none;color:var(--muted);font-family:'Barlow Condensed';font-size:.8rem;letter-spacing:1.5px;text-transform:uppercase;padding:18px 14px;cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap;}
+.tab:hover{color:var(--text);}
+.tab.on{color:var(--accent);border-bottom-color:var(--accent);}
+
+/* PANELS */
+.panel{display:none;padding:24px 20px;max-width:900px;margin:0 auto;}
+.panel.on{display:block;}
+
+/* ALERT BANNER */
+.alert{background:linear-gradient(135deg,rgba(247,195,49,.12),rgba(232,114,90,.08));border:1px solid rgba(247,195,49,.3);border-radius:12px;padding:20px 24px;margin-bottom:22px;display:flex;align-items:flex-start;gap:16px;}
+.alert-icon{font-size:2rem;flex-shrink:0;}
+.alert h2{font-family:'Bebas Neue';font-size:1.6rem;color:var(--accent);letter-spacing:1px;margin-bottom:4px;}
+.alert p{font-size:.82rem;color:var(--text);line-height:1.8;}
+
+/* SECTION GRID */
+.part-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;}
+@media(max-width:600px){.part-grid{grid-template-columns:1fr;}}
+.part-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;}
+.part-card .part-label{font-family:'Bebas Neue';font-size:1.1rem;letter-spacing:2px;margin-bottom:8px;}
+.part-card .part-label.mc{color:var(--a4);}
+.part-card .part-label.comm{color:var(--a2);}
+.part-card .part-label.calc{color:var(--a3);}
+.part-card .part-label.app{color:var(--accent);}
+.part-card p{font-size:.8rem;line-height:1.8;color:var(--text);}
+.part-card .tag{display:inline-block;padding:2px 9px;border-radius:10px;font-size:.65rem;font-weight:700;margin:3px 3px 3px 0;letter-spacing:.5px;}
+.tag-blue{background:rgba(124,156,247,.18);color:var(--a4);}
+.tag-green{background:rgba(62,207,142,.18);color:var(--a2);}
+.tag-red{background:rgba(232,114,90,.18);color:var(--a3);}
+.tag-gold{background:rgba(247,195,49,.18);color:var(--accent);}
+
+/* NOTES */
+.note-block{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);margin-bottom:14px;overflow:hidden;}
+.note-head{background:var(--s2);padding:13px 18px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;user-select:none;}
+.note-head h3{font-family:'Barlow Condensed';font-size:1.05rem;font-weight:700;letter-spacing:.5px;}
+.note-head .nh-tag{font-size:.65rem;font-weight:700;padding:3px 10px;border-radius:10px;letter-spacing:.5px;}
+.note-body{padding:18px 20px;display:none;}
+.note-body.open{display:block;}
+
+.fbox{background:var(--s2);border-left:3px solid var(--accent);border-radius:0 7px 7px 0;padding:10px 14px;margin:8px 0;font-family:'Fira Mono';font-size:.8rem;color:var(--accent);line-height:2.2;}
+.ebox{background:#0f1f18;border:1px solid #1e4030;border-radius:7px;padding:12px 16px;margin:8px 0;font-size:.8rem;line-height:1.9;color:var(--text);}
+.ebox strong{color:var(--a2);}
+.wbox{background:#1f1400;border:1px solid #4a3000;border-radius:7px;padding:10px 14px;margin:8px 0;font-size:.78rem;line-height:1.7;color:#ffc;}
+.note-body p,
+.note-body li{font-size:.82rem;line-height:1.8;color:var(--text);}
+.note-body ul{padding-left:18px;margin:6px 0;}
+.note-body h4{font-family:'Barlow Condensed';font-size:.88rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin:14px 0 6px;}
+.step-row{display:flex;align-items:flex-start;gap:12px;margin:6px 0;}
+.step-num{background:var(--accent);color:#000;font-weight:700;font-size:.72rem;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+
+/* PATHWAY DIAGRAM */
+.pathway{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:0;margin:14px 0;overflow-x:auto;}
+.pw-node{background:var(--s2);border:2px solid var(--border);border-radius:9px;padding:12px 16px;text-align:center;min-width:90px;}
+.pw-node .pn-top{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;}
+.pw-node .pn-val{font-family:'Fira Mono';font-size:.82rem;color:var(--accent);}
+.pw-node.key{border-color:var(--a3);background:#1a0f0a;}
+.pw-node.key .pn-val{color:var(--a3);}
+.pw-arrow{display:flex;flex-direction:column;align-items:center;padding:0 6px;}
+.pw-arrow .pa-op{font-size:.6rem;color:var(--muted);white-space:nowrap;}
+.pw-arrow .pa-arr{font-size:1.3rem;color:var(--a2);}
+
+/* QUIZ */
+.qz-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px;}
+.qz-score{font-family:'Bebas Neue';font-size:2rem;color:var(--accent);}
+.qz-prog{width:100%;height:5px;background:var(--border);border-radius:3px;margin-bottom:18px;overflow:hidden;}
+.qz-fill{height:100%;background:var(--accent);transition:width .4s;}
+.qz-card{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px;}
+.qz-meta{font-size:.68rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;}
+.qz-q{font-family:'Barlow Condensed';font-size:1.15rem;font-weight:600;line-height:1.5;margin-bottom:18px;}
+.qz-opts{display:flex;flex-direction:column;gap:9px;}
+.qz-opt{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:11px 15px;font-size:.8rem;cursor:pointer;text-align:left;color:var(--text);transition:all .2s;font-family:'Barlow';}
+.qz-opt:hover:not(:disabled){border-color:var(--accent);color:var(--accent);}
+.qz-opt.ok{background:#0d2018;border-color:var(--a2);color:var(--a2);}
+.qz-opt.no{background:#1f0c0a;border-color:var(--a3);color:var(--a3);}
+.qz-opt:disabled{cursor:default;}
+.qz-exp{background:var(--s2);border-left:3px solid var(--a2);padding:12px 15px;font-size:.78rem;line-height:1.7;display:none;margin-top:10px;border-radius:0 7px 7px 0;}
+.qz-nav{display:flex;justify-content:space-between;margin-top:6px;}
+.btn{padding:10px 22px;border:none;border-radius:8px;font-family:'Barlow Condensed';font-size:.85rem;font-weight:700;letter-spacing:1px;cursor:pointer;transition:all .2s;}
+.btn-gold{background:var(--accent);color:#000;}
+.btn-gold:hover{box-shadow:0 0 14px rgba(247,195,49,.35);}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--muted);}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
+.result-box{text-align:center;padding:40px 20px;}
+.result-pct{font-family:'Bebas Neue';font-size:5rem;color:var(--accent);}
+.result-sub{font-size:.85rem;color:var(--muted);margin:8px 0 24px;}
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.filt{padding:6px 14px;background:var(--s2);border:1px solid var(--border);border-radius:20px;font-size:.7rem;cursor:pointer;color:var(--muted);letter-spacing:.5px;transition:all .2s;}
+.filt.on{border-color:var(--accent);color:var(--accent);background:rgba(247,195,49,.08);}
+
+/* HYDRATE WORKED EX */
+.steps-box{background:var(--s2);border-radius:9px;padding:16px 20px;margin:10px 0;}
+.step-line{display:flex;gap:14px;align-items:flex-start;padding:6px 0;border-bottom:1px solid var(--border);}
+.step-line:last-child{border-bottom:none;}
+.sl-num{background:var(--a3);color:#fff;font-size:.68rem;font-weight:700;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.sl-text{font-size:.8rem;line-height:1.7;}
+.sl-text strong{color:var(--accent);}
+.sl-math{font-family:'Fira Mono';color:var(--a2);font-size:.78rem;}
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <div class="bar-logo">TEST SPRINT</div>
+  <button class="tab on" onclick="show('map',this)">📍 Test Map</button>
+  <button class="tab" onclick="show('notes',this)">📖 Notes</button>
+  <button class="tab" onclick="show('hydrate',this)">🧪 Hydrate Lab</button>
+  <button class="tab" onclick="show('quiz',this)">⚡ Practice</button>
+</div>
+
+<!-- ══════════════════ TEST MAP ══════════════════ -->
+<div id="panel-map" class="panel on">
+
+  <div class="alert">
+    <div class="alert-icon">🎯</div>
+    <div>
+      <h2>Your Test — Exactly What's On It</h2>
+      <p>Based on your teacher's transcript. Four parts. Every topic below came directly from what was said. Study in this order — highest marks first.</p>
+    </div>
+  </div>
+
+  <div class="part-grid">
+    <div class="part-card">
+      <div class="part-label mc">Part A — Multiple Choice</div>
+      <div class="tag tag-blue">Mole conversions</div>
+      <div class="tag tag-blue">% composition</div>
+      <div class="tag tag-blue">Empirical formulas</div>
+      <div class="tag tag-blue">Limiting reagent</div>
+      <div class="tag tag-blue">Hydrate</div>
+      <p style="margin-top:10px">Mix of all topics. ~5–10 questions. Get fast at the conversions — they're always in MC.</p>
+    </div>
+    <div class="part-card">
+      <div class="part-label comm">Part B — Communication (2 Questions)</div>
+      <div class="tag tag-green">Stoichiometry method</div>
+      <div class="tag tag-green">Conversion chains</div>
+      <p style="margin-top:10px">Show work clearly. Starting from <strong>moles</strong>, <strong>mass</strong>, OR <strong>number of particles</strong> — convert to moles first, always.</p>
+    </div>
+    <div class="part-card">
+      <div class="part-label calc">Part C — Application Calculations</div>
+      <div class="tag tag-red">★ Limiting reagent problem</div>
+      <div class="tag tag-red">★ Hydrate formula problem</div>
+      <p style="margin-top:10px">Two full multi-step problems. These are your highest marks. Know the exact steps cold.</p>
+    </div>
+    <div class="part-card">
+      <div class="part-label app">Part D — Application (5 marks)</div>
+      <div class="tag tag-gold">One of the above topics</div>
+      <p style="margin-top:10px">One applied question worth 5 marks. Could be any topic from the test — likely hydrate or limiting reagent given they were specifically mentioned.</p>
+    </div>
+  </div>
+
+  <!-- MOLE PATHWAY -->
+  <div class="note-block" style="border-color:rgba(247,195,49,.3)">
+    <div class="note-head" onclick="tog(this)" style="background:rgba(247,195,49,.06)">
+      <h3 style="color:var(--accent)">⭐ THE MOLE PATHWAY — Memorize This. It Solves Everything.</h3>
+      <span class="nh-tag tag-gold">CORE METHOD</span>
+    </div>
+    <div class="note-body open">
+      <div class="pathway">
+        <div class="pw-node"><div class="pn-top">Given</div><div class="pn-val">Particles #</div></div>
+        <div class="pw-arrow"><div class="pa-op">÷ Nₐ</div><div class="pa-arr">↘</div></div>
+        <div class="pw-node key"><div class="pn-top">Step 1 ← START HERE</div><div class="pn-val">Moles of A</div></div>
+        <div class="pw-arrow"><div class="pa-op">× (coeff B ÷ coeff A)</div><div class="pa-arr">→</div></div>
+        <div class="pw-node key"><div class="pn-top">Step 2 KEY STEP</div><div class="pn-val">Moles of B</div></div>
+        <div class="pw-arrow"><div class="pa-op">× MM</div><div class="pa-arr">↘</div></div>
+        <div class="pw-node"><div class="pn-top">Answer</div><div class="pn-val">Mass (g)</div></div>
+      </div>
+      <div class="pathway" style="margin-top:4px">
+        <div class="pw-node"><div class="pn-top">Given</div><div class="pn-val">Mass (g)</div></div>
+        <div class="pw-arrow"><div class="pa-op">÷ MM</div><div class="pa-arr">↗</div></div>
+        <div style="width:90px"></div>
+        <div style="width:80px"></div>
+        <div style="width:90px"></div>
+        <div class="pw-arrow"><div class="pa-op">× Nₐ</div><div class="pa-arr">↗</div></div>
+        <div class="pw-node"><div class="pn-top">Answer</div><div class="pn-val">Particles #</div></div>
+      </div>
+      <div class="fbox">
+        ALWAYS convert to MOLES first, no matter what you're given.<br>
+        n = m ÷ MM &nbsp;&nbsp;&nbsp; n = # ÷ Nₐ &nbsp;&nbsp;&nbsp; Nₐ = 6.02 × 10²³<br>
+        m = n × MM &nbsp;&nbsp; # = n × Nₐ<br>
+        Mole ratio from balanced equation: n(B) = n(A) × [coeff(B) ÷ coeff(A)]
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ NOTES ══════════════════ -->
+<div id="panel-notes" class="panel">
+
+  <div class="note-block">
+    <div class="note-head" onclick="tog(this)">
+      <h3>Mole Conversions (given in Part B)</h3>
+      <span class="nh-tag tag-blue">COMM</span>
+    </div>
+    <div class="note-body">
+      <h4>Starting from MOLES</h4>
+      <div class="ebox"><strong>Find mass:</strong> m = n × MM<br><strong>Find particles:</strong> # = n × 6.02×10²³</div>
+      <h4>Starting from MASS</h4>
+      <div class="fbox">Step 1: n = m ÷ MM &nbsp;&nbsp; → Step 2: mole ratio → Step 3: answer</div>
+      <div class="ebox"><strong>Ex:</strong> 3.4g N₂ → find mass NH₃ (N₂+3H₂→2NH₃)<br>
+        n(N₂) = 3.4÷28.0 = 0.121 mol<br>
+        n(NH₃) = 0.121 × (2÷1) = 0.242 mol<br>
+        m(NH₃) = 0.242 × 17.0 = <strong>4.1 g</strong></div>
+      <h4>Starting from PARTICLES</h4>
+      <div class="ebox"><strong>Ex:</strong> 3.01×10²³ molecules → find mass of H₂O<br>
+        n = 3.01×10²³ ÷ 6.02×10²³ = 0.500 mol<br>
+        m = 0.500 × 18.0 = <strong>9.0 g</strong></div>
+    </div>
+  </div>
+
+  <div class="note-block">
+    <div class="note-head" onclick="tog(this)">
+      <h3>% Composition</h3>
+      <span class="nh-tag tag-blue">MC + COMM</span>
+    </div>
+    <div class="note-body">
+      <div class="fbox">% element = (mass of element in formula / total molar mass) × 100%</div>
+      <div class="ebox">
+        <strong>Ex: Mg(OH)₂</strong> — MM = 24.3 + 16.0×2 + 1.0×2 = 58.3 g/mol<br>
+        % Mg = 24.3÷58.3 × 100 = 41.7%<br>
+        % O = 32.0÷58.3 × 100 = 54.9%<br>
+        % H = 2.0÷58.3 × 100 = 3.46%<br>
+        ✓ Check: 41.7 + 54.9 + 3.46 ≈ 100%
+      </div>
+      <div class="wbox">⚠️ To find mass of element in a sample: mass × (element MM / formula MM)</div>
+    </div>
+  </div>
+
+  <div class="note-block">
+    <div class="note-head" onclick="tog(this)">
+      <h3>Empirical & Molecular Formulas</h3>
+      <span class="nh-tag tag-blue">MC + COMM</span>
+    </div>
+    <div class="note-body">
+      <h4>Empirical Formula — 4 Steps</h4>
+      <div class="step-line"><div class="sl-num">1</div><div class="sl-text">% → assume 100g → you now have grams of each element</div></div>
+      <div class="step-line"><div class="sl-num">2</div><div class="sl-text">g ÷ MM → moles of each element</div></div>
+      <div class="step-line"><div class="sl-num">3</div><div class="sl-text">÷ by smallest moles → ratio</div></div>
+      <div class="step-line"><div class="sl-num">4</div><div class="sl-text">× multiplier if needed to get whole numbers (×2 if .5, ×3 if .33)</div></div>
+      <div class="ebox">
+        <strong>Ex: 52.2%C, 13.0%H, 34.8%O</strong><br>
+        C: 52.2÷12.0=4.35 &nbsp; H: 13.0÷1.0=13.0 &nbsp; O: 34.8÷16.0=2.175<br>
+        ÷2.175: C=2, H=6, O=1 → <strong>EF = C₂H₆O</strong>
+      </div>
+      <h4>Molecular Formula</h4>
+      <div class="fbox">a = Molecular Mass ÷ EF mass &nbsp;&nbsp;&nbsp; MF = EF × a</div>
+      <div class="ebox">EF = CH (mass=13u), Mol. mass=78u → a=6 → <strong>MF = C₆H₆</strong></div>
+    </div>
+  </div>
+
+  <div class="note-block">
+    <div class="note-head" onclick="tog(this)">
+      <h3>Limiting Reagent — Part C Will Have This</h3>
+      <span class="nh-tag tag-red">★ HIGH VALUE</span>
+    </div>
+    <div class="note-body">
+      <div class="wbox">⭐ The limiting reagent (LR) is the reactant that runs out first and stops the reaction.</div>
+      <div class="steps-box">
+        <div class="step-line"><div class="sl-num">1</div><div class="sl-text">Balance the equation</div></div>
+        <div class="step-line"><div class="sl-num">2</div><div class="sl-text">Convert <strong>all</strong> reactant masses → moles (n = m ÷ MM)</div></div>
+        <div class="step-line"><div class="sl-num">3</div><div class="sl-text">Divide each reactant's moles by its <strong>coefficient</strong></div></div>
+        <div class="step-line"><div class="sl-num">4</div><div class="sl-text"><strong>Smallest result = Limiting Reagent</strong></div></div>
+        <div class="step-line"><div class="sl-num">5</div><div class="sl-text">Use LR moles × (coeff product ÷ coeff LR) → moles of product</div></div>
+        <div class="step-line"><div class="sl-num">6</div><div class="sl-text">m = n × MM → mass of product</div></div>
+      </div>
+      <div class="ebox">
+        <strong>Na₂CO₃ + CaCl₂ → CaCO₃ + 2NaCl</strong><br>
+        34.7g Na₂CO₃: n=34.7÷106.0=0.327mol → ÷1 = <strong>0.327</strong><br>
+        41.2g CaCl₂: n=41.2÷111.0=0.371mol → ÷1 = <strong>0.371</strong><br>
+        LR = Na₂CO₃ (0.327 is smaller)<br>
+        n(NaCl) = 0.327 × (2÷1) = 0.654 mol<br>
+        m(NaCl) = 0.654 × 58.5 = <strong>38.3 g</strong>
+      </div>
+      <div class="ebox">
+        <strong>2Al(OH)₃ + 3H₂SO₄ → Al₂(SO₄)₃ + 6H₂O</strong><br>
+        21.0g Al(OH)₃: n=0.269mol → ÷2 = <strong>0.1346</strong><br>
+        40.7g H₂SO₄: n=0.415mol → ÷3 = <strong>0.1383</strong><br>
+        LR = Al(OH)₃ (0.1346 &lt; 0.1383)<br>
+        n(H₂O) = 0.269 × (6÷2) = 0.807 mol → m = 0.807×18.0 = <strong>14.5 g</strong>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════ HYDRATE LAB ══════════════════ -->
+<div id="panel-hydrate" class="panel">
+  <div class="alert" style="background:linear-gradient(135deg,rgba(62,207,142,.1),rgba(124,156,247,.06));border-color:rgba(62,207,142,.3)">
+    <div class="alert-icon">🧪</div>
+    <div>
+      <h2 style="color:var(--a2)">Hydrate Lab Problem — Part C</h2>
+      <p>Your teacher said: <em>"a problem very similar to your hydrate lab — calculate the formula of a hydrate being given data like you collected."</em> This is the exact method.</p>
+    </div>
+  </div>
+
+  <div class="note-block">
+    <div class="note-head" onclick="tog(this)" style="background:rgba(62,207,142,.06)">
+      <h3 style="color:var(--a2)">★ Method: Finding x in Salt·xH₂O</h3>
+      <span class="nh-tag tag-green">STEP BY STEP</span>
+    </div>
+    <div class="note-body open">
+      <div class="wbox">A hydrate heats → loses water → anhydrous salt remains.<br>You get: mass of hydrate and mass of anhydrous salt (or crucible masses to calculate it).</div>
+      <div class="steps-box">
+        <div class="step-line"><div class="sl-num">1</div><div class="sl-text"><strong>Find mass of water lost</strong><br><span class="sl-math">m(H₂O) = m(hydrate) − m(anhydrous salt)</span></div></div>
+        <div class="step-line"><div class="sl-num">2</div><div class="sl-text"><strong>Find moles of anhydrous salt</strong><br><span class="sl-math">n(salt) = m(salt) ÷ MM(salt)</span></div></div>
+        <div class="step-line"><div class="sl-num">3</div><div class="sl-text"><strong>Find moles of water</strong><br><span class="sl-math">n(H₂O) = m(H₂O) ÷ 18.0</span></div></div>
+        <div class="step-line"><div class="sl-num">4</div><div class="sl-text"><strong>Find ratio x</strong><br><span class="sl-math">x = n(H₂O) ÷ n(salt) → round to nearest whole number</span></div></div>
+        <div class="step-line"><div class="sl-num">5</div><div class="sl-text"><strong>Write the formula:</strong> Salt·xH₂O</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note-block">
+    <div class="note-head" onclick="tog(this)">
+      <h3>Worked Example — Using YOUR Actual Lab Data</h3>
+      <span class="nh-tag tag-green">FROM YOUR LAB</span>
+    </div>
+    <div class="note-body open">
+      <p style="margin-bottom:10px">Your lab used NaHCO₃, which is not a hydrate — but the <strong>exact same math</strong> applies. Here's how a hydrate problem works using your same data structure:</p>
+      <div class="ebox">
+        <strong>Your Lab Data:</strong><br>
+        Mass of crucible: 17.76 g<br>
+        Mass of NaHCO₃ added: 1.29 g<br>
+        Mass of crucible + residue: 18.65 g<br>
+        Mass of residue: 18.65 − 17.76 = <strong>0.89 g</strong><br>
+        Mass "lost" (CO₂ + H₂O): 1.29 − 0.89 = <strong>0.40 g</strong>
+      </div>
+      <p>For a hydrate problem on the test, it will look like this:</p>
+      <div class="ebox">
+        <strong>Sample Test Problem:</strong><br>
+        A 3.60g sample of CuSO₄·xH₂O is heated. The anhydrous salt has mass 2.30g.<br>
+        Find the formula of the hydrate.
+      </div>
+      <div class="steps-box">
+        <div class="step-line"><div class="sl-num">1</div><div class="sl-text"><strong>Mass of H₂O lost</strong><br><span class="sl-math">= 3.60 − 2.30 = 1.30 g</span></div></div>
+        <div class="step-line"><div class="sl-num">2</div><div class="sl-text"><strong>MM of CuSO₄</strong> = 63.5 + 32.1 + (16.0×4) = 159.6 g/mol<br><span class="sl-math">n(CuSO₄) = 2.30 ÷ 159.6 = 0.01441 mol</span></div></div>
+        <div class="step-line"><div class="sl-num">3</div><div class="sl-text"><strong>Moles of water:</strong><br><span class="sl-math">n(H₂O) = 1.30 ÷ 18.0 = 0.07222 mol</span></div></div>
+        <div class="step-line"><div class="sl-num">4</div><div class="sl-text"><strong>x = n(H₂O) ÷ n(salt)</strong><br><span class="sl-math">x = 0.07222 ÷ 0.01441 = 5.01 ≈ 5</span></div></div>
+        <div class="step-line"><div class="sl-num">5</div><div class="sl-text"><strong>Formula: CuSO₄·5H₂O</strong> (copper(II) sulphate pentahydrate) ✓</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note-block">
+    <div class="note-head" onclick="tog(this)">
+      <h3>Your Lab: % Error Calculation (Analysis Q3)</h3>
+      <span class="nh-tag tag-green">COMPLETED</span>
+    </div>
+    <div class="note-body open">
+      <p style="margin-bottom:10px">Your teacher's transcript specifically mentioned % error — this is in your lab's Analysis Q3. Here's the complete correct calculation from your actual data:</p>
+      <div class="ebox">
+        <strong>Your experimental ratio:</strong> 1.29 ÷ 0.89 = <strong>1.449</strong><br>
+        (Note: the 1.63 written on your sheet appears to be a math error — 1.29÷0.89 = 1.449)
+      </div>
+      <div class="steps-box">
+        <div class="step-line"><div class="sl-num">1</div><div class="sl-text"><strong>Theoretical ratio for Equation 2:</strong><br><span class="sl-math">2 × MM(NaHCO₃) ÷ MM(Na₂CO₃) = 168.0 ÷ 106.0 = 1.585</span></div></div>
+        <div class="step-line"><div class="sl-num">2</div><div class="sl-text"><strong>Theoretical ratio for Equation 4:</strong><br><span class="sl-math">4 × 84.0 ÷ (2 × 134.0) = 336.0 ÷ 268.0 = 1.254</span></div></div>
+        <div class="step-line"><div class="sl-num">3</div><div class="sl-text"><strong>% Error using Equation 2:</strong><br><span class="sl-math">|1.449 − 1.585| ÷ 1.585 × 100% = 8.58%</span></div></div>
+        <div class="step-line"><div class="sl-num">4</div><div class="sl-text"><strong>Why the error?</strong> Incomplete decomposition — some NaHCO₃ didn't fully react, leaving the residue heavier → ratio lower than theoretical. This is the expected error source.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PRACTICE QUIZ ══════════════════ -->
+<div id="panel-quiz" class="panel">
+
+  <div id="qz-start">
+    <h2 style="font-family:'Bebas Neue';font-size:1.8rem;margin-bottom:16px;letter-spacing:1px">Practice — Exactly The Test Topics</h2>
+    <div class="filter-row">
+      <button class="filt on" onclick="setF('all',this)">All</button>
+      <button class="filt" onclick="setF('moles',this)">Mole Conversions</button>
+      <button class="filt" onclick="setF('comp',this)">% Comp &amp; Formulas</button>
+      <button class="filt" onclick="setF('lr',this)">Limiting Reagent</button>
+      <button class="filt" onclick="setF('hydrate',this)">Hydrate</button>
+    </div>
+    <button class="btn btn-gold" onclick="startQ()" style="font-size:1rem;padding:14px 32px">Start Practice ⚡</button>
+  </div>
+
+  <div id="qz-active" style="display:none">
+    <div class="qz-bar">
+      <div style="font-size:.75rem;color:var(--muted)" id="qz-info">Q1/20</div>
+      <div class="qz-score" id="qz-sc">0</div>
+    </div>
+    <div class="qz-prog"><div class="qz-fill" id="qz-fill" style="width:0%"></div></div>
+    <div id="qz-area"></div>
+  </div>
+
+  <div id="qz-result" style="display:none">
+    <div class="result-box">
+      <div class="result-pct" id="res-pct"></div>
+      <div class="result-sub" id="res-msg"></div>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <button class="btn btn-gold" onclick="startQ()">Try Again</button>
+        <button class="btn btn-ghost" onclick="document.getElementById('qz-start').style.display='block';document.getElementById('qz-result').style.display='none'">Change Topic</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── PANEL & NOTE TOGGLE ───────────────────────────────────────────────────────
+function show(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+  document.getElementById('panel-' + id).classList.add('on');
+  if(btn) btn.classList.add('on');
+}
+function tog(hdr) {
+  const body = hdr.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+// ── QUIZ DATA ─────────────────────────────────────────────────────────────────
+const QB = [
+  // MOLES
+  {t:'moles',q:'How many moles are in 53.0 g of Na₂CO₃? (MM = 106.0 g/mol)',
+   opts:['0.500 mol','5.00 mol','0.250 mol','1.06 mol'],ans:0,
+   ex:'n = m ÷ MM = 53.0 ÷ 106.0 = 0.500 mol. Always divide mass by molar mass to get moles.'},
+  {t:'moles',q:'How many molecules are in 2.0 mol of water?',
+   opts:['1.20 × 10²⁴','6.02 × 10²³','3.01 × 10²³','2.0'],ans:0,
+   ex:'# = n × Nₐ = 2.0 × 6.02×10²³ = 1.204×10²⁴ molecules.'},
+  {t:'moles',q:'How many moles are in 3.01 × 10²³ atoms of sulfur?',
+   opts:['0.500 mol','1.00 mol','0.250 mol','0.333 mol'],ans:0,
+   ex:'n = # ÷ Nₐ = 3.01×10²³ ÷ 6.02×10²³ = 0.500 mol.'},
+  {t:'moles',q:'What is the mass of 0.242 mol of NH₃? (MM = 17.0 g/mol)',
+   opts:['4.11 g','8.22 g','2.06 g','17.0 g'],ans:0,
+   ex:'m = n × MM = 0.242 × 17.0 = 4.11 g. Always multiply moles by molar mass.'},
+  {t:'moles',q:'N₂ + 3H₂ → 2NH₃. Starting with 0.500 mol N₂ (excess H₂), how many mol NH₃ forms?',
+   opts:['1.00 mol','0.500 mol','1.50 mol','0.333 mol'],ans:0,
+   ex:'Mole ratio: 1 N₂ : 2 NH₃. n(NH₃) = 0.500 × (2÷1) = 1.00 mol.'},
+  {t:'moles',q:'N₂ + 3H₂ → 2NH₃. 3.4 g N₂ reacts. What mass of NH₃ forms?',
+   opts:['4.1 g','2.1 g','8.2 g','1.7 g'],ans:0,
+   ex:'n(N₂)=3.4÷28.0=0.121 mol. n(NH₃)=0.121×2=0.242 mol. m=0.242×17.0=4.1 g.'},
+  // % COMP
+  {t:'comp',q:'What is the % composition of Mg in Mg(OH)₂? (MM = 58.3 g/mol)',
+   opts:['41.7%','54.9%','3.46%','24.3%'],ans:0,
+   ex:'% Mg = (24.3 ÷ 58.3) × 100 = 41.7%. Divide element mass by total formula mass.'},
+  {t:'comp',q:'A compound is 92.3% C and 7.70% H. The empirical formula is:',
+   opts:['CH','C₂H','CH₂','C₂H₂'],ans:0,
+   ex:'C: 92.3÷12.0=7.69 mol, H: 7.70÷1.0=7.70 mol. Ratio ≈ 1:1 → EF = CH.'},
+  {t:'comp',q:'EF = CH, molecular mass = 78 u. What is the molecular formula?',
+   opts:['C₆H₆','C₃H₃','CH','C₂H₂'],ans:0,
+   ex:'EF mass = 13u. a = 78÷13 = 6. MF = C₆H₆.'},
+  {t:'comp',q:'A compound is 52.2% C, 13.0% H, 34.8% O. What is the empirical formula?',
+   opts:['C₂H₆O','CH₃O','C₂H₄O','C₄H₁₂O₂'],ans:0,
+   ex:'C:4.35, H:13.0, O:2.175 mol. ÷2.175 → C:2, H:6, O:1 → C₂H₆O.'},
+  {t:'comp',q:'Mass of Mg in 7.40 g of Mg(OH)₂ (% Mg = 41.7%)?',
+   opts:['3.09 g','4.31 g','7.40 g','1.24 g'],ans:0,
+   ex:'mass = 7.40 × (24.3÷58.3) = 7.40 × 0.417 = 3.09 g.'},
+  // LIMITING REAGENT
+  {t:'lr',q:'Na₂CO₃ + CaCl₂ → CaCO₃ + 2NaCl. 34.7g Na₂CO₃ and 41.2g CaCl₂. Which is the limiting reagent? (MM Na₂CO₃=106.0, CaCl₂=111.0)',
+   opts:['Na₂CO₃','CaCl₂','Both equal','Neither'],ans:0,
+   ex:'n(Na₂CO₃)=0.327 ÷1=0.327. n(CaCl₂)=0.371 ÷1=0.371. 0.327<0.371 → Na₂CO₃ is LR.'},
+  {t:'lr',q:'Using the limiting reagent (0.327 mol Na₂CO₃) from the above, what mass of NaCl forms? (MM NaCl=58.5)',
+   opts:['38.3 g','19.1 g','58.5 g','76.6 g'],ans:0,
+   ex:'Ratio 1:2. n(NaCl)=0.327×2=0.654 mol. m=0.654×58.5=38.3 g.'},
+  {t:'lr',q:'2Al(OH)₃ + 3H₂SO₄ → Al₂(SO₄)₃ + 6H₂O. Which is the LR? 21.0g Al(OH)₃ (MM=78.0) and 40.7g H₂SO₄ (MM=98.1)',
+   opts:['Al(OH)₃','H₂SO₄','Both','Neither'],ans:0,
+   ex:'n(Al(OH)₃)=0.269÷2=0.1346. n(H₂SO₄)=0.415÷3=0.1383. 0.1346<0.1383 → Al(OH)₃ is LR.'},
+  {t:'lr',q:'Using the LR from above (0.269 mol Al(OH)₃), what mass of H₂O forms? (MM=18.0)',
+   opts:['14.5 g','7.25 g','29.0 g','4.84 g'],ans:0,
+   ex:'Ratio 2 Al(OH)₃ : 6 H₂O → ×3. n(H₂O)=0.269×3=0.807 mol. m=0.807×18.0=14.5 g.'},
+  {t:'lr',q:'What is the purpose of dividing each reactant\'s moles by its coefficient when finding the LR?',
+   opts:['To compare relative amounts based on the mole ratio of the reaction','To find the molar mass','To convert moles to mass','To find the % yield'],ans:0,
+   ex:'Dividing by coefficient gives the "relative moles" — normalized to the reaction ratio. The smallest value is the one that runs out first.'},
+  // HYDRATE
+  {t:'hydrate',q:'A 5.03g hydrate of Cu(NO₃)₂ is heated, leaving 3.89g of anhydrous salt. What is the mass of water lost?',
+   opts:['1.14 g','3.89 g','5.03 g','8.92 g'],ans:0,
+   ex:'m(H₂O) = 5.03 − 3.89 = 1.14 g. Always subtract anhydrous mass from hydrate mass.'},
+  {t:'hydrate',q:'n(salt) = 0.0207 mol and n(H₂O) = 0.0633 mol. What is x in the hydrate formula?',
+   opts:['3','4','5','2'],ans:0,
+   ex:'x = n(H₂O) ÷ n(salt) = 0.0633 ÷ 0.0207 = 3.06 ≈ 3. Round to nearest whole number.'},
+  {t:'hydrate',q:'A 3.60g sample of CuSO₄·xH₂O leaves 2.30g CuSO₄ after heating (MM CuSO₄=159.6). What is x?',
+   opts:['5','3','4','7'],ans:0,
+   ex:'m(H₂O)=1.30g. n(H₂O)=1.30÷18.0=0.0722mol. n(CuSO₄)=2.30÷159.6=0.0144mol. x=0.0722÷0.0144=5.01≈5.'},
+  {t:'hydrate',q:'% Error formula is:',
+   opts:['|measured − theoretical| ÷ theoretical × 100%','measured ÷ theoretical × 100%','theoretical ÷ measured × 100%','(measured + theoretical) ÷ 2 × 100%'],ans:0,
+   ex:'% Error = |measured − theoretical| / theoretical × 100%. The absolute value means it\'s always positive.'},
+  {t:'hydrate',q:'An experimental ratio is 1.449 and theoretical is 1.585. What is the % error?',
+   opts:['8.58%','91.4%','9.40%','1.36%'],ans:0,
+   ex:'|1.449−1.585|÷1.585×100 = 0.136÷1.585×100 = 8.58%.'},
+];
+
+let qFilter = 'all', qPool = [], qIdx = 0, qScore = 0, qAns = false;
+
+function setF(f, btn) {
+  qFilter = f;
+  document.querySelectorAll('.filt').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+}
+
+function shuffle(a) { return a.sort(() => Math.random() - .5); }
+
+function startQ() {
+  qPool = shuffle(qFilter === 'all' ? [...QB] : QB.filter(q => q.t === qFilter)).slice(0, 20);
+  qIdx = 0; qScore = 0; qAns = false;
+  document.getElementById('qz-start').style.display = 'none';
+  document.getElementById('qz-result').style.display = 'none';
+  document.getElementById('qz-active').style.display = 'block';
+  renderQ();
+}
+
+function renderQ() {
+  if (qIdx >= qPool.length) { showResult(); return; }
+  const q = qPool[qIdx];
+  const pct = (qIdx / qPool.length) * 100;
+  document.getElementById('qz-fill').style.width = pct + '%';
+  document.getElementById('qz-info').textContent = `Q${qIdx+1}/${qPool.length}`;
+  document.getElementById('qz-sc').textContent = qScore + ' pts';
+  qAns = false;
+  document.getElementById('qz-area').innerHTML = `
+    <div class="qz-card">
+      <div class="qz-meta">${{moles:'Mole Conversions',comp:'% Comp & Formulas',lr:'Limiting Reagent',hydrate:'Hydrate'}[q.t]||q.t}</div>
+      <div class="qz-q">${q.q}</div>
+      <div class="qz-opts">
+        ${q.opts.map((o,i) => `<button class="qz-opt" onclick="pick(${i})">${String.fromCharCode(65+i)}) ${o}</button>`).join('')}
+      </div>
+      <div class="qz-exp" id="exp">${q.ex}</div>
+    </div>
+    <div class="qz-nav">
+      <button class="btn btn-ghost" onclick="showResult()">End</button>
+      <button class="btn btn-gold" id="nxt" onclick="nextQ()" style="display:none">Next →</button>
+    </div>`;
+}
+
+function pick(idx) {
+  if (qAns) return;
+  qAns = true;
+  const q = qPool[qIdx];
+  const opts = document.querySelectorAll('.qz-opt');
+  opts.forEach(o => o.disabled = true);
+  opts[q.ans].classList.add('ok');
+  if (idx !== q.ans) opts[idx].classList.add('no');
+  else qScore++;
+  document.getElementById('qz-sc').textContent = qScore + ' pts';
+  document.getElementById('exp').style.display = 'block';
+  document.getElementById('nxt').style.display = 'inline-block';
+}
+
+function nextQ() { qIdx++; renderQ(); }
+
+function showResult() {
+  document.getElementById('qz-active').style.display = 'none';
+  document.getElementById('qz-result').style.display = 'block';
+  const pct = qPool.length > 0 ? Math.round(qScore / qPool.length * 100) : 0;
+  document.getElementById('res-pct').textContent = pct + '%';
+  const msgs = [[90,'🔥 Ready for that test!'],[75,'💪 Solid — review what you missed.'],[60,'📚 Keep drilling the weak spots.'],[0,'⚡ Focus on notes first, then retry.']];
+  document.getElementById('res-msg').textContent = `${qScore}/${qPool.length} — ${msgs.find(m => pct >= m[0])[1]}`;
+}
+</script>
+</body>
+</html>
